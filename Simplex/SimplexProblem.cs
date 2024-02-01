@@ -16,7 +16,7 @@ namespace FunctionExample
         public void SetBaseMatrix(List<List<float>> baseMatrix)
         {
             this.baseMatrix = baseMatrix;
-            inverseBaseMatrix = MyMath.calculateInverse(baseMatrix);
+            inverseBaseMatrix = MyMath.CalculateInverse(baseMatrix);
         }
 
         public SimplexProblem(RawProblem rawProblem)
