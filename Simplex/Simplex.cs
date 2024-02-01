@@ -44,7 +44,7 @@ namespace FunctionExample
         private static List<float> CalculateLambda(SimplexProblem simplexProblem)
         {
             return MyMath.MatrixProduct(
-                [simplexProblem.baseObjective], simplexProblem.inverseBaseMatrix
+                MyMath.MatrixTranspose([simplexProblem.baseObjective]), simplexProblem.inverseBaseMatrix
             )[0];
         }
 
@@ -56,7 +56,7 @@ namespace FunctionExample
             for(var i=0; i< allCanonics.Count; i++)
             {
                 List<List<float>> unitaryMatrix = MyMath.MatrixProduct(
-                    [lambda], [simplexProblem.nonBaseMatrix[i]]
+                    MyMath.MatrixTranspose([lambda]), [simplexProblem.nonBaseMatrix[i]]
                 );
                 allCanonics[i] = simplexProblem.nonBaseObjective[i] - unitaryMatrix[0][0];
             }
