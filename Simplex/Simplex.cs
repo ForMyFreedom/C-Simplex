@@ -43,22 +43,24 @@ namespace FunctionExample
 
         private static List<float> CalculateLambda(SimplexProblem simplexProblem)
         {
-            return MyMath.MatrixProduct(
-                MyMath.MatrixTranspose([simplexProblem.baseObjective]), simplexProblem.inverseBaseMatrix
-            )[0];
+            return MyMath.LinearizateCollumMatrix(
+                MyMath.MatrixProduct(
+                    MyMath.MatrixTranspose([simplexProblem.baseObjective]), simplexProblem.inverseBaseMatrix
+                )
+            );
         }
 
         private static List<float> CalculateAllCanonics(SimplexProblem simplexProblem)
         {
-            List<float> lambda = CalculateLambda(simplexProblem);
+            List<List<float>> lambda = MyMath.MatrixTranspose([CalculateLambda(simplexProblem)]);
             List<float> allCanonics = new (simplexProblem.nonBaseIndex.Count);
 
-            for(var i=0; i< allCanonics.Count; i++)
+            for(var i=0; i< allCanonics.Capacity; i++)
             {
                 List<List<float>> unitaryMatrix = MyMath.MatrixProduct(
-                    MyMath.MatrixTranspose([lambda]), [simplexProblem.nonBaseMatrix[i]]
+                    lambda, [simplexProblem.nonBaseMatrix[i]]
                 );
-                allCanonics[i] = simplexProblem.nonBaseObjective[i] - unitaryMatrix[0][0];
+                allCanonics.Add(simplexProblem.nonBaseObjective[i] - unitaryMatrix[0][0]);
             }
 
             return allCanonics;
@@ -66,8 +68,7 @@ namespace FunctionExample
 
         private static int GetBestCanonicIndex(List<float> targetCanonics)
         {
-            List<float> list = new(targetCanonics);
-            return list.IndexOf(list.Max());
+            return targetCanonics.IndexOf(targetCanonics.Min());
         }
 
         private static bool IsOptimalSolution(List<float> targetCanonics)
@@ -86,15 +87,15 @@ namespace FunctionExample
         {
             List<float> finalSolution = new(simplexProblem.rawProblem.dimension);
             float finalValue = 0;
-            for (var i = 0; i < finalSolution.Count; i++)
+            for (var i = 0; i < finalSolution.Capacity; i++)
             {
-                finalSolution[i] = 0;
+                finalSolution.Add(0);
             }
-            foreach(var value in basicSolution)
+            for(var i=0; i < basicSolution.Count; i++)
             {
-                int index = basicSolution.IndexOf(value);
-                finalSolution[simplexProblem.baseIndex[index]] = value;
-                finalValue += value*simplexProblem.rawProblem.objetive[index];
+                float value = basicSolution[i];
+                finalSolution[simplexProblem.baseIndex[i]] = value;
+                finalValue += value*simplexProblem.rawProblem.objetive[simplexProblem.baseIndex[i]];
             }
             MyConsole.PrintSollution(finalSolution, finalValue);
         }
@@ -114,7 +115,7 @@ namespace FunctionExample
         private static int CalculateToRemoveCollumIndex(List<float> basicSoluction, List<float> inverseInCanonicCollum)
         {
             List<float> list = new(inverseInCanonicCollum.Count);
-            for(var i=0; i < list.Count; i++)
+            for(var i=0; i < list.Capacity; i++)
             {
                 float value;
                 if (inverseInCanonicCollum[i] > 0)

@@ -26,13 +26,13 @@ namespace FunctionExample
             baseIndex = new List<int>(rawProblem.restrictionAmount);
             for (var i = 0; i < rawProblem.restrictionAmount; i += 1)
             {
-                baseIndex[i] = i;
+                baseIndex.Add(i);
             }
 
             nonBaseIndex = new List<int>(rawProblem.dimension - rawProblem.restrictionAmount);
-            for (var i = 0; i < nonBaseIndex.Count; i += 1)
+            for (var i = 0; i < nonBaseIndex.Capacity; i += 1)
             {
-                baseIndex[i] = i + rawProblem.restrictionAmount;
+                nonBaseIndex.Add(i + rawProblem.restrictionAmount);
             }
 
             baseMatrix = new(baseIndex.Count);
@@ -50,37 +50,42 @@ namespace FunctionExample
 
         public void CalculateMatrixesFromRaw()
         {
-            foreach (int i in baseIndex)
+            baseMatrix = [];
+            for (var i = 0; i < baseIndex.Count; i++)
             {
-                baseMatrix[i] = new(rawProblem.dimension);
-                for (var j = 0; j < rawProblem.dimension; j++)
+                int selectedIndex = baseIndex[i];
+                baseMatrix.Add(new(rawProblem.restrictionAmount));
+                for (var j = 0; j < rawProblem.restrictionAmount; j++)
                 {
-                    baseMatrix[i][j] = rawProblem.restrictionLeft[j][i];
+                    baseMatrix[i].Add(rawProblem.restrictionLeft[j][selectedIndex]);
                 }
             }
 
             SetBaseMatrix(baseMatrix); // Here to calculate the 'inverseBaseMatrix'
 
-            foreach (int i in nonBaseIndex)
+            nonBaseMatrix = [];
+            for(var i=0; i<nonBaseIndex.Count; i++)
             {
-                nonBaseMatrix[i] = new(rawProblem.dimension);
-                for (var j = 0; j < rawProblem.dimension; j++)
+                int selectedIndex = nonBaseIndex[i];
+                nonBaseMatrix.Add(new(rawProblem.restrictionAmount));
+                for (var j = 0; j < rawProblem.restrictionAmount; j++)
                 {
-                    nonBaseMatrix[i][j] = rawProblem.restrictionLeft[j][i];
+                    nonBaseMatrix[i].Add(rawProblem.restrictionLeft[j][selectedIndex]);
                 }
             }
         }
 
         public void CalculateObjetivesFromRaw()
         {
+            baseObjective = [];
             foreach (int i in baseIndex)
             {
-                baseObjective[i] = rawProblem.objetive[i];
+                baseObjective.Add(rawProblem.objetive[i]);
             }
-
+            nonBaseObjective = [];
             foreach (int i in nonBaseIndex)
             {
-                nonBaseObjective[i] = rawProblem.objetive[i];
+                nonBaseObjective.Add(rawProblem.objetive[i]);
             }
         }
     }
