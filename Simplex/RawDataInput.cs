@@ -59,6 +59,7 @@ namespace FunctionExample
         private static float[] EnterRightRestricionsData(int restrictionAmount)
         {
             float[] restrictionRight = new float[restrictionAmount];
+            Console.WriteLine("######################");
             for (int i = 0; i < restrictionAmount; i++)
             {
                 Console.Write("Insira o valor a direita do '=' na Restrição " + i + ": ");
