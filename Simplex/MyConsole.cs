@@ -11,5 +11,10 @@ namespace FunctionExample
             }
             Console.WriteLine("Valor Ótimo da Função Objetivo: " + finalValue);
         }
+
+        public static string GetListText<T>(List<T> list)
+        {
+            return String.Join(", ", list);
+        }
     }
 }

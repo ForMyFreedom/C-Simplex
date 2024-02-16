@@ -26,8 +26,7 @@ namespace FunctionExample
                     }
                     else
                     {
-                        Console.WriteLine("Problema sem Solução");
-                        return;
+                        throw new Exception("Problema sem Solução");
                     }
                 }
                 interaction++;
@@ -85,6 +84,11 @@ namespace FunctionExample
 
         private static void FinishWithOptiomal(SimplexProblem simplexProblem, List<float> basicSolution)
         {
+            if (IsImpossible(basicSolution))
+            {
+                throw new Exception("IMPOSSIBLE SOLUTION!");
+            }
+
             List<float> finalSolution = new(simplexProblem.rawProblem.dimension);
             float finalValue = 0;
             for (var i = 0; i < finalSolution.Capacity; i++)
@@ -140,6 +144,18 @@ namespace FunctionExample
                 }
             }
             return true;
+        }
+
+        private static bool IsImpossible(List<float> list)
+        {
+            foreach (var item in list)
+            {
+                if (item < 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         private static void UpdateSimplexProblem(SimplexProblem simplexProblem, int toAddCollumIndex, int toRemoveCollumIndex)

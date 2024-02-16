@@ -38,11 +38,9 @@ namespace FunctionExample
             baseMatrix = new(baseIndex.Count);
             inverseBaseMatrix = new(baseIndex.Count);
             nonBaseMatrix = new(nonBaseIndex.Count);
-            CalculateMatrixesFromRaw();
 
             baseObjective = new(baseIndex.Count);
             nonBaseObjective = new(nonBaseIndex.Count);
-            CalculateObjetivesFromRaw();
 
             this.restrictionEquals = new(rawProblem.restrictionRight);
         }
